@@ -1,0 +1,672 @@
+<html>
+    <body>
+<h1 style="color: saddlebrown; padding: 20px;">Add Form </h1>
+<form class="login-page"[formGroup]='test' (ngSubmit)='createTestCase()'>
+    <div class='form-group' >
+        <label class="center-block">Id
+        <input type="number" class='form-control' formControlName="id" id="id" name="id" [(ngModel)]='newtestcase.id'  >      
+            </label>
+    </div>
+    <div  [hidden]="test.controls.id.valid || test.controls.id.pristine" style="color: red;">
+        *Id is mandatory
+    </div>
+    <div class='form-group' >
+        <label class="center-block">Title
+        <input type="text" class='form-control' formControlName="title" name="title" id="title" [(ngModel)]='newtestcase.title' >      
+           </label>
+    </div>
+    <div [hidden]="test.controls.title.valid || test.controls.title.pristine" style="color: red;">
+        Title is mandatory
+    </div>
+    <div class='form-group' >
+        <label class="center-block">Description
+        <input type="text" class='form-control' formControlName="description" name="description" id="description" [(ngModel)]='newtestcase.description'>      
+            </label>
+    </div>
+    <div [hidden]="test.controls.description.valid || test.controls.description.pristine" style="color: red;">
+        *Description is mandatory
+    </div>
+    <div class='form-group' >
+        <label class="center-block">RunTime
+        <input type="number" class='form-control' formControlName="runtime" name="runtime" id="runtime" [(ngModel)]='newtestcase.runtime' >      
+            </label>
+    </div>
+    <div [hidden]="test.controls.runtime.valid || test.controls.runtime.pristine" style="color: red;">
+        *Runtime is mandatory
+    </div>
+    <div class='form-group' >
+    <label for="status">Status</label>
+  <select name="status" id="status" name="status">
+    <option value="failed">failed</option>
+    <option value="success">Success</option>
+   
+  </select>
+   </div>
+   <div [hidden]="test.controls.status.valid || test.controls.status.pristine" style="color: red;">
+    *Status is mandatory
+</div>
+
+    <button type="submit" class="btn btn-success">Submit</button>
+</form>
+<a [routerLink]='["/dashboard"]' style="color:red;">Go to Dashboard</a><br>
+<a [routerLink]='["/list"]' style="color:red;">Go to List Component</a>
+
+</body>
+</html>
+
+
+import { Component, OnInit } from '@angular/core';
+import { DataService } from '../data.service';
+import { Test } from '../testcase';
+import { FormControl,FormGroup, Validators} from '@angular/forms';
+
+@Component({
+  selector: 'app-add',
+  templateUrl: './add.component.html',
+  styleUrls: ['./add.component.css']
+})
+export class AddComponent implements OnInit {
+  newtestcase:Test=new Test();
+  addedtestcase:Test=new Test();
+  isadd=false;
+
+  constructor(private dataService:DataService) { }
+
+  ngOnInit(): void {
+  }
+  createTestCase()
+  {
+     let testre=this.dataService.createTestCase(this.newtestcase).subscribe(testcase=>this.addedtestcase=testcase)
+    if(testre!=null)
+    alert("Book added successfully")
+    this.isadd=true;
+}
+  test=new FormGroup({id:new FormControl('',[Validators.required,Validators.minLength(1)]),title:new FormControl('',[Validators.required]),description:new FormControl('',[Validators.required]),runtime:new FormControl('',[Validators.required]),status:new FormControl('',[Validators.required])})
+
+}
+
+
+
+
+
+
+<html>
+    <body>
+        <div class="login-page">
+<table >
+    <thead>
+        <tr>
+            <th> Id</th>
+            <th>Title</th>
+            <th>description</th>
+            <th>RunTime</th>
+            <th>Status</th>
+           
+            
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngIf='testAll' >
+            <td>{{testAll.id}}</td>
+            <td>{{testAll.title}}</td>
+            <td>{{testAll.description}}</td>
+            <td>{{testAll.runtime}}</td>
+            <td>{{testAll.status}}</td>
+            </tr>
+    </tbody>
+</table>
+<a [routerLink]='["/dashboard"]'>Go to Dashboard</a>
+</div>
+</body>
+</html>
+
+
+
+import { Component, OnInit } from '@angular/core';
+import { DataService } from '../data.service';
+import { Test } from '../testcase';
+import { ActivatedRoute,RouterPreloader } from '@angular/router';
+
+@Component({
+  selector: 'app-all',
+  templateUrl: './all.component.html',
+  styleUrls: ['./all.component.css']
+})
+export class AllComponent implements OnInit {
+
+  testAll:Test=new Test();
+  testId:number;
+ constructor(private dataService:DataService, private route:ActivatedRoute) { }
+
+ ngOnInit(): void {
+   this.route.params.subscribe(params=>this.testId=params['id'])
+   this.dataService.getTestCaseById(this.testId).subscribe(test=>this.testAll=test);
+ }
+
+}
+
+
+
+<!--<p>dashboard works!</p>
+<p>dashboard works!</p>
+<html>
+
+<body>
+<div class="row">
+ Welcome to TestCase Management System
+</div>
+
+
+
+<div class="row">
+  <button routerLink="/list"style="font-size : 30px; width: 20%; height: 50px;">Show List</button>  <br><br>
+  <button routerLink="/add" style="font-size : 30px; width: 20%; height: 50px;">Add TestCAse </button> <br><br>
+ 
+  
+ 
+ 
+ </div>
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>CSS Website Layout</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  
+  background-color: aqua;
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+  border-right:1px solid #bbb;
+}
+
+li:last-child {
+  border-right: none;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover:not(.active) {
+  background-color:slateblue;
+}
+
+.active {
+  background-color: #4CAF50;
+}
+
+/* Style the header */
+.header {
+  background-color: #f1f1f1;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Style the top navigation bar */
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+/* Style the topnav links */
+.topnav a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change color on hover */
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+ a:hover:not(.active){
+   background-color: green;
+ }
+.active{
+  background-color:yellowgreen
+}
+
+/* Create three unequal columns that floats next to each other */
+.column {
+  float: left;
+  padding: 10px;
+}
+
+/* Left and right column */
+.column.side {
+  width: 25%;
+}
+
+/* Middle column */
+.column.middle {
+  width: 50%;
+  font-size: 27px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .column.side, .column.middle {
+    width: 100%;
+  }
+}
+
+/* Style the footer */
+.footer {
+  background-color:burlywood;
+  padding: 10px;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Welcome To Test-Case Management System</h1>
+  <p>Your Experience Matters To Us!!!! </p>
+</div>
+
+<ul>
+ <!--<li><a class="active" >DashBoard</a></li>
+  <li><a href="#">Log In</a></li>
+  <li><a href="#">AddTestCase</a></li>
+  <li><a href="#">Edit Details</a></li>
+  <li><a href="#">Update Details</a></li>-->
+  <button routerLink="/list"style="font-size : 20px; width: 10%; height: 50px;">Show List</button> 
+  <button routerLink="/add"style="font-size : 20px; width: 10%; height: 50px;">Add TestCase</button> 
+  <button routerLink="/list"style="font-size : 20px; width: 10%; height: 50px;">Edit TestCase</button> 
+  <button routerLink="/list"style="font-size : 20px; width: 10%; height: 50px;">delete TestCase</button> 
+
+  
+</ul>
+
+<div class="row">
+  <div class="column side">
+    <h2>Why Test-Case?</h2>
+    <p> To require consistency in the test case execution</p>
+      To make sure a better test coverage
+     
+  </div>
+  
+  <div class="column middle">
+    <h2>About Test-Case </h2>
+    <p>A test case is a set of actions performed on a system to determine if it satisfies software requirements and functions correctly. The purpose of a test case is to determine if different features within a system are performing as expected and to confirm that the system satisfies all related standards, guidelines and customer requirements. The process of writing a test case can also help reveal errors or defects within the system.
+Test cases are typically written by members of the quality assurance (QA) team or the testing team and can be used as step-by-step instructions for each system test. Testing begins once the development team has finished a system feature or set of features. A sequence or collection of test cases is called a test suite.
+      
+ 
+
+    
+  </div>
+  
+  <div class="column side">
+    <h2>New Features!!</h2>
+    <p>Easily Runnable</p>
+    <p></p>
+  </div>
+</div>
+
+<div class="footer">
+  <h1>Any Query?   Please call us at 9078654600</h1>
+  <p>Email us at test@casemanagement.gmail.com</p>
+</div>
+  
+</body>
+</html>
+
+
+
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css']
+})
+export class DashboardComponent implements OnInit {
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+
+
+
+
+<html>
+    <body>
+        <div class="login-page">
+<table class="center" >
+
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>title</th>
+            <th>Description</th>
+            <th>Runtime</th>
+            <th>Delete</th>
+           
+            
+        </tr>
+    </thead>
+    <tbody *ngFor='let testcase of test'  >
+        <tr>
+            <td>{{testcase.id}}</td>
+            <td>{{testcase.title}}</td>
+            <td>{{testcase.description}}</td>
+            <td>{{testcase.runtime}}</td>
+          <td><button type="button" class="btn btn-link" (click)="deleteTestCase(testcase.id)">Delete</button>
+        </td>
+          
+            
+        </tr>
+       
+    </tbody>
+    
+</table>
+</div>
+</body>
+</html>
+
+
+
+
+import { Component, OnInit } from '@angular/core';
+import { DataService } from '../data.service';
+import { Test } from '../testcase';
+
+@Component({
+  selector: 'app-delete',
+  templateUrl: './delete.component.html',
+  styleUrls: ['./delete.component.css']
+})
+export class DeleteComponent implements OnInit 
+{
+  test:Test[];
+  constructor(private dataService:DataService) { }
+
+  ngOnInit(): void {
+    this.dataService.getAllTestCases().subscribe(test=>this.test=test)
+  }
+  deleteTestCase(id:number)
+  {
+    alert("press ok to confirm");
+    this.dataService.delete(id).subscribe(test=>this.test=test)
+    alert("deleted successfully")
+  }
+}
+
+
+
+
+
+<html>
+   
+      <h1 style="text-align: center;">Edit TestCase</h1>
+  
+   <body>
+<form class="login-page" #editForm='ngForm' (ngSubmit)='editForm.valid && editRunTime()'>
+    <label>id
+       <input type='number' [(ngModel)]='editTest.id' name='id' id='id' disabled #id=ngModel>
+    </label>
+    <br>
+    <label>title
+        <input type='text' [(ngModel)]='editTest.title' name='title' id='title' disabled #title=ngModel>
+     </label>
+     <br>
+     <label>Description
+        <input type='text' [(ngModel)]='editTest.description' name='description' id='description' disabled #description=ngModel>
+     </label>
+     <br>
+     <label>Runtime
+        <input type='number' [(ngModel)]='editTest.runtime'  min='10' name='runtime' id='runtime' required #runtime=ngModel>
+     </label>
+     <div style='color: red' *ngIf="runtime.errors && editForm.submitted">
+    *Price field is necessary
+    </div>
+    <div class="form-group">
+    <button type="submit" class="btn btn-success center-block">Edit</button>
+    </div>
+</form>
+<div *ngIf="edited">
+    <button routerLink="/list"style="font-size : 30px; width: 20%; height: 50px;">Show List</button>  <br><br>
+</div>
+</body>
+</html>
+
+
+
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute,RouterPreloader } from '@angular/router';
+import { DataService } from '../data.service';
+import { Test } from '../testcase';
+
+
+
+@Component({
+  selector: 'app-edit',
+  templateUrl: './edit.component.html',
+  styleUrls: ['./edit.component.css']
+})
+export class EditComponent implements OnInit {
+ edited:boolean=false;
+ editTest:Test=new Test();
+ testId:number;
+  constructor(private dataService:DataService,private route:ActivatedRoute) { }
+
+  ngOnInit() {
+    this.route.params.subscribe(params=>this.testId=params['id']);
+    this.dataService.getTestCaseById(this.testId).subscribe(test=>this.editTest=test);
+   
+    
+  
+}
+editRunTime()
+{
+  
+  this.dataService.UpdateTestcase(this.editTest).subscribe(testcase=>this.editTest=testcase);
+  alert("edited successfully");
+  this.edited=true;
+  
+ 
+}
+
+}
+
+
+
+
+<html>
+<head>
+    
+        
+    </head> 
+    <body style="text-align: center;">
+        <div class="login-page">
+<table  >
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>title</th>
+            <th>Description</th>
+            <th>Runtime</th>
+            <th>Delete Row</th>
+            <th>Edit runtime</th>
+            
+        </tr>
+    </thead>
+    <tbody *ngFor='let testcase of testcases'  [routerLink]="['/all',testcase.id]" >
+        <tr>
+            <td>{{testcase.id}}</td>
+            <td>{{testcase.title}}</td>
+            <td>{{testcase.description}}</td>
+            <td>{{testcase.runtime}}</td>
+          <td><a [routerLink]='["/delete",testcase.id]'>delete</a></td>
+          <td><a [routerLink]='["/edit",testcase.id]'>Edit</a></td>
+          
+          
+            
+        </tr>
+       
+    </tbody>
+    
+</table>
+<br><br>
+<a [routerLink]='["/add"]' style="text-align: center;">Add TestCase</a><br><br>
+    <a [routerLink]='["/dashboard"]' style="text-align: center;">Go to Dashboard</a><br><br>
+    <a [routerLink]='["/list"]' style="text-align: center;">Go to List</a>
+</div>
+</body>
+</html>
+
+
+
+
+import { Component, OnInit } from '@angular/core';
+import { DataService } from '../data.service';
+import { Test } from '../testcase';
+
+@Component({
+  selector: 'app-list',
+  templateUrl: './list.component.html',
+  styleUrls: ['./list.component.css']
+})
+export class ListComponent implements OnInit {
+
+  testcases:Test[];
+  constructor(private dataService:DataService) {
+
+   }
+
+  ngOnInit(): void {
+    this.dataService.getAllTestCases().subscribe(testcases=>this.testcases=testcases);
+
+}
+}
+
+
+
+
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { AddComponent } from './add/add.component';
+import { AllComponent } from './all/all.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { DeleteComponent } from './delete/delete.component';
+import { EditComponent } from './edit/edit.component';
+import { ListComponent } from './list/list.component';
+
+const routes: Routes =  [{path:"",redirectTo:'/dashboard','pathMatch':'full'},{
+  path:"dashboard",component:DashboardComponent
+},{path:"add",component:AddComponent},
+
+{path:"list",component:ListComponent},
+{path:"edit/:id",component:EditComponent},
+{path:"delete/:id",component:DeleteComponent},
+{path:"all/:id",component:AllComponent}
+
+
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
+
+
+import { Injectable } from '@angular/core';
+import { from, Observable } from 'rxjs';
+import {HttpClient} from '@angular/common/http'
+import { Test } from './testcase';
+import {map,filter,catchError,mergeMap} from 'rxjs/operators'
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DataService {
+
+  url='http://localhost:8081/api';
+  constructor(private http:HttpClient) { }
+
+getAllTestCases():Observable<any>
+{
+ return this.http.get(this.url.concat("/test"));
+  
+
+  }
+  getTestCaseById(id:number):Observable<any>
+  {
+   return this.http.get(this.url.concat("/test/")+id+"");
+  }
+ 
+  delete(id:number):Observable<any>
+  {
+    return this.http.get(this.url.concat("/test/Delete/")+id+"");
+    
+  }
+  createTestCase(testcase:Test):Observable<any>
+  {
+    return this.http.post(this.url.concat("/test"),testcase);
+  }
+  UpdateTestcase(testcase:Test):Observable<any>
+  {
+   
+   /* let append=this.url.concat("/test");
+    return this.http.post(append,testcase);*/
+    return this.http.put(this.url.concat("/test"),testcase);
+  }
+  
+}
+
+
+export class Test
+{
+    id:number;
+    title:string;
+    description:String;
+    runtime:number;
+    status:String;
+   
+}
+
+
+
+
+
+
